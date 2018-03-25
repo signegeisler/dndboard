@@ -1,6 +1,6 @@
 function Occupant(color, letter) {
     this.color = color;
-    this.letter = 'A1';
+    this.letter = letter;
     this.fontColor = determineFontColor(this.color);
 }
 

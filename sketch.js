@@ -16,6 +16,8 @@ var hoveringOccupant;
 
 var oncontextmenu = "event.preventDefault();";
 
+var opponents;
+
 function make2DArray(cols, rows) {
     var arr = new Array(cols);
     for (var i = 0; i < arr.length; i++) {
@@ -70,6 +72,8 @@ function setup() {
     button = createButton('change mode');
     button.position(input.x + input.width, 65);
     button.mousePressed(toggleMoveMode);
+
+    opponents = createNumberDict();
 }
 
 function draw() {
@@ -97,7 +101,15 @@ function mousePressed() {
             for (var i = 0; i < cols; i++) {
                 for (var j = 0; j < rows; j++) {
                     if (grid[i][j].contains(mouseX, mouseY) && !grid[i][j].isFull()) {
-                        grid[i][j].occupants.push(new Occupant(getChosenColor(), 'a'));
+                        var letter = input.value() == "" ? 'X' : input.value();
+
+                        if (opponents.hasKey(letter)) {
+                            opponents.add(letter, 1)
+                        } else {
+                            opponents.create(letter, 1);
+                        }
+
+                        grid[i][j].occupants.push(new Occupant(getChosenColor(), letter + opponents.get(letter)));
                     }
                 }
             }
@@ -153,14 +165,14 @@ function mouseReleased() {
         for (var j = 0; j < rows; j++) {
             if (moveMode && hoveringOccupant != undefined) {
                 if (grid[i][j].contains(mouseX, mouseY) && !grid[i][j].isFull()) {
-                    grid[i][j].occupants.push(new Occupant(hoveringOccupant.color, 'a'));
+                    grid[i][j].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter));
                     hoveringOccupant = undefined;
                 }
             }
         }
     }
     if (moveMode && hoveringOccupant != undefined) {
-        grid[hoveringOccupant.originI][hoveringOccupant.originJ].occupants.push(new Occupant(hoveringOccupant.color, 'a'));
+        grid[hoveringOccupant.originI][hoveringOccupant.originJ].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter));
     }
 }
 
