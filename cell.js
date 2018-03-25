@@ -1,6 +1,8 @@
 function Cell(x, y, w) {
     this.occupied = false;
+    this.isBlocking = false;
     this.occupants = [];
+    this.color = color(213, 216, 220);
     this.x = x;
     this.y = y;
     this.w = w;
@@ -10,7 +12,7 @@ var cellPlacement;
 
 Cell.prototype.show = function () {
     stroke(0);
-    fill(255);
+    fill(this.color);
     rect(this.x, this.y, this.w, this.w);
 
     if (this.occupants.length > 0) {
@@ -31,7 +33,7 @@ Cell.prototype.contains = function (x, y) {
 }
 
 Cell.prototype.isFull = function () {
-    return this.occupants.length > 3;
+    return this.occupants.length > 3 || this.isBlocking;
 }
 
 Cell.prototype.removeOccupant = function (mX, mY) {
