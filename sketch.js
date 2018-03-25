@@ -5,11 +5,14 @@ var w = 50;
 var menuWidth = 350;
 
 var input;
+var button;
 
 var moveMode = false;
 
 var colors;
 var colorChoices;
+
+var hoveringOccupant;
 
 var oncontextmenu = "event.preventDefault();";
 
@@ -44,6 +47,10 @@ function setupColorChoices() {
     return arr;
 }
 
+function toggleMoveMode() {
+    moveMode = !moveMode;
+}
+
 function setup() {
     createCanvas(1920, 1080);
     cols = floor(height / w);
@@ -59,6 +66,10 @@ function setup() {
             grid[i][j] = new Cell(i * w, j * w, w);
         }
     }
+
+    button = createButton('change mode');
+    button.position(input.x + input.width, 65);
+    button.mousePressed(toggleMoveMode);
 }
 
 function draw() {
@@ -72,6 +83,10 @@ function draw() {
 
     for (var i = 0; i < colorChoices.length; i++) {
         colorChoices[i].show();
+    }
+
+    if (moveMode && hoveringOccupant != undefined) {
+        hoveringOccupant.show();
     }
 }
 
@@ -108,12 +123,45 @@ function mousePressed() {
                 }
             }
         }
-    } else {
-        // move mode
+    }
+}
 
+function mouseDragged() {
+    if (moveMode) {
+        if (hoveringOccupant == undefined) {
+            for (var i = 0; i < cols; i++) {
+                for (var j = 0; j < rows; j++) {
+                    if (grid[i][j].contains(mouseX, mouseY)) {
+                        if (grid[i][j].occupants.length == 1) {
+                            var occ = grid[i][j].occupants[0];
+                            hoveringOccupant = new HoverOccupant(occ.color, occ.letter, mouseX, mouseY, 30, i, j);
+                            grid[i][j].occupants = [];
+                        }
+                    }
+                }
+            }
+        } else {
+            hoveringOccupant.x = mouseX;
+            hoveringOccupant.y = mouseY;
+        }
 
     }
+}
 
+function mouseReleased() {
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            if (moveMode && hoveringOccupant != undefined) {
+                if (grid[i][j].contains(mouseX, mouseY) && !grid[i][j].isFull()) {
+                    grid[i][j].occupants.push(new Occupant(hoveringOccupant.color, 'a'));
+                    hoveringOccupant = undefined;
+                }
+            }
+        }
+    }
+    if (moveMode && hoveringOccupant != undefined) {
+        grid[hoveringOccupant.originI][hoveringOccupant.originJ].occupants.push(new Occupant(hoveringOccupant.color, 'a'));
+    }
 }
 
 function getChosenColor() {
