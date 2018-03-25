@@ -1,0 +1,102 @@
+var grid;
+var rows;
+var cols;
+var w = 50;
+var menuWidth = 350;
+
+var input;
+
+var colors;
+var colorChoices;
+
+function make2DArray(cols, rows) {
+    var arr = new Array(cols);
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = new Array(rows);
+    }
+    return arr;
+}
+
+function setupColorChoices() {
+    colors = [color(192, 57, 43), color(155, 89, 182),
+             color(41, 128, 185), color(39, 174, 96), color(241, 196, 15), color(230, 126, 34), color(135, 54, 0)];
+
+    var spacing = 10;
+    var totalSpacing = spacing * colors.length;
+    var remaining = menuWidth - totalSpacing;
+    var boxWidth = remaining / colors.length;
+
+    var x = width - menuWidth;
+    var y = boxWidth / 2 + spacing;
+
+    var arr = [];
+
+    for (var i = 0; i < colors.length; i++) {
+        arr.push(new ColorChoice(x, y, boxWidth, colors[i]));
+        x += boxWidth + spacing;
+    }
+    arr[0].chosen = true;
+
+    return arr;
+}
+
+function setup() {
+    createCanvas(1920, 1080);
+    cols = floor(height / w);
+    rows = floor(height / w);
+    grid = make2DArray(cols, rows);
+    colorChoices = setupColorChoices();
+
+    input = createInput();
+    input.position(width - menuWidth, 100);
+
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            grid[i][j] = new Cell(i * w, j * w, w);
+        }
+    }
+}
+
+function draw() {
+    background(0);
+
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            grid[i][j].show();
+        }
+    }
+
+    for (var i = 0; i < colorChoices.length; i++) {
+        colorChoices[i].show();
+    }
+}
+
+
+function mousePressed() {
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            if (grid[i][j].contains(mouseX, mouseY)) {
+                grid[i][j].occupants.push(new Occupant(getChosenColor()));
+            }
+        }
+    }
+
+    for (var i = 0; i < colorChoices.length; i++) {
+        if (colorChoices[i].contains(mouseX, mouseY)) {
+            for (var j = 0; j < colorChoices.length; j++) {
+                colorChoices[j].chosen = false;
+            }
+            colorChoices[i].chosen = true;
+        }
+    }
+
+}
+
+function getChosenColor() {
+    for (var i = 0; i < colorChoices.length; i++) {
+        if (colorChoices[i].chosen) {
+            return colorChoices[i].color;
+        }
+    }
+    return color(151);
+}
