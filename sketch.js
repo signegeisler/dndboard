@@ -148,6 +148,13 @@ function mouseDragged() {
                             var occ = grid[i][j].occupants[0];
                             hoveringOccupant = new HoverOccupant(occ.color, occ.letter, mouseX, mouseY, 30, i, j);
                             grid[i][j].occupants = [];
+                        } else if (grid[i][j].occupants.length > 1) {
+                            var occIdx = grid[i][j].getClickedOccupantIndex(mouseX, mouseY);
+                            if (occIdx != -1) {
+                                var occ = grid[i][j].occupants[occIdx];
+                                hoveringOccupant = new HoverOccupant(occ.color, occ.letter, mouseX, mouseY, 30, i, j);
+                                grid[i][j].removeOccupant(mouseX, mouseY);
+                            }
                         }
                     }
                 }
@@ -173,6 +180,7 @@ function mouseReleased() {
     }
     if (moveMode && hoveringOccupant != undefined) {
         grid[hoveringOccupant.originI][hoveringOccupant.originJ].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter));
+        hoveringOccupant = undefined;
     }
 }
 

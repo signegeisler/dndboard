@@ -42,6 +42,14 @@ Cell.prototype.removeOccupant = function (mX, mY) {
     }
 }
 
+Cell.prototype.getClickedOccupantIndex = function (mX, mY) {
+    var quarter = quarterClicked(mX, mY, this.x, this.y, this.w);
+    if (quarterOccupied(this.occupants, quarter)) {
+        return quarter;
+    }
+    return -1;
+}
+
 quarterClicked = function (mX, mY, x, y, w) {
     if (mX <= x + w / 2) {
         if (y <= y + w / 2) {
