@@ -6,8 +6,12 @@ var menuWidth = 350;
 
 var input;
 
+var moveMode = false;
+
 var colors;
 var colorChoices;
+
+var oncontextmenu = "event.preventDefault();";
 
 function make2DArray(cols, rows) {
     var arr = new Array(cols);
@@ -73,21 +77,41 @@ function draw() {
 
 
 function mousePressed() {
-    for (var i = 0; i < cols; i++) {
-        for (var j = 0; j < rows; j++) {
-            if (grid[i][j].contains(mouseX, mouseY)) {
-                grid[i][j].occupants.push(new Occupant(getChosenColor()));
+    if (!moveMode) {
+        if (mouseButton === LEFT) {
+            for (var i = 0; i < cols; i++) {
+                for (var j = 0; j < rows; j++) {
+                    if (grid[i][j].contains(mouseX, mouseY) && !grid[i][j].isFull()) {
+                        grid[i][j].occupants.push(new Occupant(getChosenColor(), 'a'));
+                    }
+                }
             }
-        }
-    }
 
-    for (var i = 0; i < colorChoices.length; i++) {
-        if (colorChoices[i].contains(mouseX, mouseY)) {
-            for (var j = 0; j < colorChoices.length; j++) {
-                colorChoices[j].chosen = false;
+            for (var i = 0; i < colorChoices.length; i++) {
+                if (colorChoices[i].contains(mouseX, mouseY)) {
+                    for (var j = 0; j < colorChoices.length; j++) {
+                        colorChoices[j].chosen = false;
+                    }
+                    colorChoices[i].chosen = true;
+                }
             }
-            colorChoices[i].chosen = true;
+        } else if (mouseButton === RIGHT) {
+            for (var i = 0; i < cols; i++) {
+                for (var j = 0; j < rows; j++) {
+                    if (grid[i][j].contains(mouseX, mouseY)) {
+                        if (grid[i][j].occupants.length == 1) {
+                            grid[i][j].occupants = [];
+                        } else if (grid[i][j].occupants.length > 1) {
+                            grid[i][j].removeOccupant(mouseX, mouseY);
+                        }
+                    }
+                }
+            }
         }
+    } else {
+        // move mode
+
+
     }
 
 }
