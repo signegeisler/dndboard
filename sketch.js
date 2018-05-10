@@ -124,7 +124,7 @@ function moveMode() {
     return modeRadioButton.value() == 'Move';
 }
 
-function colorMode() {
+function coloringMode() {
     return modeRadioButton.value() == 'Color';
 }
 
@@ -169,6 +169,8 @@ function draw() {
 
 
 function mousePressed() {
+  console.log(modeRadioButton.value());
+
     if (placeMode()) {
         if (mouseButton === LEFT) {
             for (var i = 0; i < cols; i++) {
@@ -208,7 +210,7 @@ function mousePressed() {
                 }
             }
         }
-    } else if (colorMode()) {
+    } else if (coloringMode()) {
         if (mouseButton === LEFT) {
             for (var i = 0; i < cols; i++) {
                 for (var j = 0; j < rows; j++) {
