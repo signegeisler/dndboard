@@ -179,8 +179,8 @@ function mousePressed() {
 
                         if (blockingElementCheckbox.checked()) {
                             if (grid[i][j].occupants.length == 0) {
-                                grid[i][j].occupants.push(new BaseOccupant(getChosenColor(), getChosenShape()));
-                                grid[i][j].isBlocking = true;
+                                grid[i][j].occupants.push(new BaseOccupant(getChosenColor(), getChosenShape(), true));
+                                //grid[i][j].isBlocking = true;
                             }
                         } else {
                             var letter = input.value() == "" ? 'X' : input.value().toUpperCase();
@@ -190,8 +190,9 @@ function mousePressed() {
                             } else {
                                 opponents.create(letter, 1);
                             }
-
-                            grid[i][j].occupants.push(new Occupant(getChosenColor(), letter + opponents.get(letter), getChosenShape()));
+                            grid[i][j].occupants.push(new Occupant(getChosenColor(), letter + opponents.get(letter), getChosenShape(), false));
+                            // grid[i][j].occupants.push(new OccupantWithLetter(grid[i][j].middle.x, grid[i][j].middle.y, 40,
+                            //   getChosenColor(), getChosenShape(), i, j, letter + opponents.get(letter)));
                         }
                     }
                 }
@@ -202,7 +203,7 @@ function mousePressed() {
                     if (grid[i][j].contains(mouseX, mouseY)) {
                         if (grid[i][j].occupants.length == 1) {
                             grid[i][j].occupants = [];
-                            grid[i][j].isBlocking = false;
+                            //grid[i][j].isBlocking = false;
                         } else if (grid[i][j].occupants.length > 1) {
                             grid[i][j].removeOccupant(mouseX, mouseY);
                         }
@@ -259,13 +260,13 @@ function mouseDragged() {
                     if (grid[i][j].contains(mouseX, mouseY)) {
                         if (grid[i][j].occupants.length == 1) {
                             var occ = grid[i][j].occupants[0];
-                            hoveringOccupant = new HoverOccupant(occ.color, occ.letter, occ.shape, mouseX, mouseY, 30, i, j);
+                            hoveringOccupant = new HoverOccupant(occ.color, occ.letter, occ.shape, mouseX, mouseY, 30, i, j, true);
                             grid[i][j].occupants = [];
                         } else if (grid[i][j].occupants.length > 1) {
                             var occIdx = grid[i][j].getClickedOccupantIndex(mouseX, mouseY);
                             if (occIdx != -1) {
                                 var occ = grid[i][j].occupants[occIdx];
-                                hoveringOccupant = new HoverOccupant(occ.color, occ.letter, occ.shape, mouseX, mouseY, 30, i, j);
+                                hoveringOccupant = new HoverOccupant(occ.color, occ.letter, occ.shape, mouseX, mouseY, 30, i, j, true);
                                 grid[i][j].removeOccupant(mouseX, mouseY);
                             }
                         }
@@ -277,6 +278,16 @@ function mouseDragged() {
             hoveringOccupant.y = mouseY;
         }
 
+    } else if (coloringMode()) {
+        if (mouseButton === LEFT) {
+            for (var i = 0; i < cols; i++) {
+                for (var j = 0; j < rows; j++) {
+                    if (grid[i][j].contains(mouseX, mouseY)) {
+                        grid[i][j].color = getChosenTileColor();
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -285,14 +296,14 @@ function mouseReleased() {
         for (var j = 0; j < rows; j++) {
             if (moveMode() && hoveringOccupant) {
                 if (grid[i][j].contains(mouseX, mouseY) && !grid[i][j].isFull()) {
-                    grid[i][j].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter, hoveringOccupant.shape));
+                    grid[i][j].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter, hoveringOccupant.shape, hoveringOccupant.isBlocking));
                     hoveringOccupant = undefined;
                 }
             }
         }
     }
     if (moveMode() && hoveringOccupant) {
-        grid[hoveringOccupant.originI][hoveringOccupant.originJ].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter, hoveringOccupant.shape));
+        grid[hoveringOccupant.originI][hoveringOccupant.originJ].occupants.push(new Occupant(hoveringOccupant.color, hoveringOccupant.letter, hoveringOccupant.shape, hoveringOccupant.isBlocking));
         hoveringOccupant = undefined;
     }
 }

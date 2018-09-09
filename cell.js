@@ -1,8 +1,9 @@
 function Cell(x, y, w) {
     this.occupied = false;
-    this.isBlocking = false;
+    //this.isBlocking = false;
     this.occupants = [];
-    this.color = color(213, 216, 220);
+    //this.color = color(213, 216, 220);
+    this.color = color(23, 32, 42);
     this.x = x;
     this.y = y;
     this.w = w;
@@ -33,7 +34,13 @@ Cell.prototype.contains = function (x, y) {
 }
 
 Cell.prototype.isFull = function () {
-    return this.occupants.length > 3 || this.isBlocking;
+  for(var occ in this.occupants){
+    if(occ.isBlocking) {
+      return true;
+    }
+  }
+
+    return this.occupants.length > 3;
 }
 
 Cell.prototype.removeOccupant = function (mX, mY) {
@@ -50,6 +57,12 @@ Cell.prototype.getClickedOccupantIndex = function (mX, mY) {
         return quarter;
     }
     return -1;
+}
+
+Cell.prototype.middle = function() {
+  let x = this.x + this.w / 2;
+  let y = this.y + this.w / 2;
+  return {x: x, y: y};
 }
 
 quarterClicked = function (mX, mY, x, y, w) {

@@ -1,6 +1,7 @@
-function BaseOccupant(color, shape) {
+function BaseOccupant(color, shape, isBlocking) {
     this.color = color;
     this.shape = shape;
+    this.isBlocking = isBlocking;
 }
 
 BaseOccupant.prototype.show = function (x, y, w, fontSize) {
@@ -10,10 +11,11 @@ BaseOccupant.prototype.show = function (x, y, w, fontSize) {
 Occupant.prototype = Object.create(BaseOccupant.prototype);
 Occupant.prototype.constructor = Occupant;
 
-function Occupant(color, letter, shape) {
+function Occupant(color, letter, shape, isBlocking) {
     BaseOccupant.call(this, color, shape);
     this.letter = letter;
     this.fontColor = determineFontColor(this.color);
+    this.isBlocking = isBlocking;
 }
 
 Occupant.prototype.show = function (x, y, w, fontSize) {
@@ -61,13 +63,14 @@ display = function (x, y, w, fontSize, color, fontColor, letter, shape) {
     text(letter, x, y);
 }
 
-function HoverOccupant(color, letter, shape, x, y, w, originI, originJ) {
+function HoverOccupant(color, letter, shape, x, y, w, originI, originJ, isBlocking) {
     Occupant.call(this, color, letter, shape);
     this.x = x;
     this.y = y;
     this.w = w;
     this.originI = originI;
     this.originJ = originJ;
+    this.isBlocking = isBlocking;
 }
 
 HoverOccupant.prototype = Object.create(Occupant.prototype);
