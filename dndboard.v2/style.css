@@ -1,0 +1,75 @@
+html, body {
+  background: grey;
+}
+
+.play-menu {
+  margin-top: 30px;
+}
+
+.color {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.color-grid {
+  display: grid;
+  grid-gap: 6px;
+  grid-template-columns: repeat(7, 40px);
+}
+
+.color-elem {
+  display: inline-block;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  grid-template-areas: "canvas menu";
+}
+
+.canvas {
+  grid-area: canvas;
+}
+
+.menu-wrapper {
+  grid-area: menu;
+  margin: 16px;
+}
+
+.nav-link {
+  color: black;
+}
+
+.nav-link:hover {
+  color: black;
+}
+
+.letter-wrapper, .occupant-type-wrapper {
+  margin-top: 16px;
+}
+
+.occupant-type-wrapper .radio-label {
+  display: inline;
+  margin-right: 16px;
+}
+
+hr {
+  border-color: #dee2e6;
+}
+
+.character{
+  display: grid;
+  grid-template-areas: "color info";
+  grid-template-columns: 1fr 7fr;
+  grid-column-gap: 6px;
+}
+
+.character .color-elem {
+  grid-area: color;
+}
+
+.character .character-info {
+  grid-area: info;
+  margin: 5px 0;
+}
