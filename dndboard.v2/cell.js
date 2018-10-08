@@ -3,8 +3,7 @@ class Cell {
     this.x = x;
     this.y = y;
     this.w = w;
-    this.occupied = false;
-    this.occupants = [];
+    this.occupant;
     this.color = color(23, 32, 42);
   }
 
@@ -12,18 +11,19 @@ class Cell {
     stroke(0);
     fill(this.color);
     rect(this.x, this.y, this.w, this.w);
+
+    if(this.occupant && !this.occupant.isHovering) {
+      this.occupant.show(this.middle().x, this.middle().y, this.w);
+    }
   }
 
-  contains(x, y) {
-    return (x > this.x && x < this.x + this.w &&
-      y > this.y && y < this.y + this.w);
+  contains(mX, mY) {
+    return (mX > this.x && mX < this.x + this.w &&
+      mY > this.y && mY < this.y + this.w);
   }
 
   isFull() {
-    if (this.occupants[0].isBlocking) {
-      return true;
-    }
-    return this.occupants.length > 3;
+    return !!this.occupant;
   }
 
   removeOccupant(mX, mY) {
@@ -42,17 +42,17 @@ class Cell {
   }
 
   middle() {
-    let x = this.x + this.w / 2;
-    let y = this.y + this.w / 2;
+    let midX = this.x + this.w / 2;
+    let midY = this.y + this.w / 2;
     return {
-      x: x,
-      y: y
+      x: midX,
+      y: midY
     };
   }
 
   quarterClicked(mX, mY) {
     if (mX <= this.x + this.w / 2) {
-      if (this.y <= this.y + this.w / 2) {
+      if (y <= this.y + this.w / 2) {
         return 0;
       } else {
         return 3;

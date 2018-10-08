@@ -1,17 +1,19 @@
 let worldGrid;
 let worldDimenScale = 1.6;
-let worldGridDimenY = 20;
+let worldGridDimenY = 20; // how many tiles down in world grid
 let worldGridDimenX = Math.floor(worldGridDimenY * worldDimenScale);
 let worldPixDimenY = 900;
 let worldPixDimenX = worldPixDimenY * worldDimenScale;
 let viewGrid;
 let selectedTileColor = '#c62828';
-let selectedOccupantColor = '#c62828';
+let selectedOccupantColor;
 let mapMakingMode = true;
 let playPlaceMode = false;
 let worldGridCoordinateI;
 let worldGridCoordinateJ;
+let cellWidth;
 let enemies;
+let hoveringOccupant;
 
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
@@ -32,27 +34,31 @@ function toggleMode(mode) {
 }
 
 function setup() {
+  selectedOccupantColor = color('#c62828');
+  frameRate(10);
   let cvs = createCanvas(worldPixDimenX, worldPixDimenY);
   cvs.parent('canvas');
   worldGrid = make2DArray(worldGridDimenX, worldGridDimenY);
   viewGrid = new ViewGrid(worldGridDimenX, worldGridDimenY);
+  cellWidth = floor(worldPixDimenY / viewGrid.dimenY);
   populateWorldGridWithCells();
   enemies = createNumberDict();
-
-  buildHtmlOccupant();
 }
 
 function draw() {
   background(50);
   goThroughAndDoCallback(drawViewGrid);
+  if (hoveringOccupant) {
+    hoveringOccupant.show(mouseX, mouseY, cellWidth);
+  }
 }
 
-function selectTileColor(color) {
-  selectedTileColor = color;
+function selectTileColor(col) {
+  selectedTileColor = col;
 }
 
-function selectOccupantColor(color) {
-  selectedOccupantColor = color;
+function selectOccupantColor(col) {
+  selectedOccupantColor = color(col);
 }
 
 function mousePressed() {
@@ -64,8 +70,10 @@ function mousePressed() {
         goThroughAndDoCallback(colorTile);
       }
     } else if (playPlaceMode) {
-      if (keyIsDown(CONRTOL) && mouseButton === LEFT) {
+      if (keyIsDown(CONTROL) && mouseButton === LEFT) {
         goThroughAndDoCallback(placeOccupant);
+      } else if (keyIsDown(CONTROL) && mouseButton === RIGHT) {
+        goThroughAndDoCallback(deleteItemFromCanvas);
       }
     }
   }
@@ -79,6 +87,20 @@ function mouseDragged() {
       } else if (mouseButton === LEFT) {
         goThroughAndDoCallback(colorTile);
       }
+    } else if (playPlaceMode) {
+      if (mouseButton === LEFT && !hoveringOccupant) {
+        goThroughAndDoCallback(pickUpOccupant);
+      }
+    }
+  }
+}
+
+function mouseReleased() {
+  if (isInsideCanvas()) {
+    if (playPlaceMode) {
+      if (mouseButton === LEFT && hoveringOccupant) {
+        goThroughAndDoCallback(putDownOccupant);
+      }
     }
   }
 }
@@ -90,10 +112,10 @@ function saveInitWorldGridCoordinate(i, j) {
   }
 }
 
-function goThroughAndDoCallback(callback) {
+function goThroughAndDoCallback(callback, arg = undefined) {
   for (let i = viewGrid.originX; i < viewGrid.originX + viewGrid.dimenX; i++) {
     for (let j = viewGrid.originY; j < viewGrid.originY + viewGrid.dimenY; j++) {
-      callback(i, j);
+      callback(i, j, arg);
     }
   }
 }
@@ -137,13 +159,32 @@ function colorTileBlock(gI, gJ, sI, sJ) {
 
 function placeOccupant(i, j) {
   if (worldGrid[i][j].contains(mouseX, mouseY) && !worldGrid[i][j].isFull()) {
-    let letter = getElementById('character-letter-input').value();
+    let letter = document.getElementById('character-letter-input').value;
     let upperCaseLetter = letter == "" ? 'X' : letter.toUpperCase();
     // don't do this if hero
     addOccupantToEnemies(upperCaseLetter);
-    let occupant = new OccupantWithLetter(x, y, w, selectOccupantColor, 'CIRCLE', i, j, upperCaseLetter);
-    // create occupant
-    // add occupant to cell's occupants
+    let occupant = new OccupantWithLetter(selectedOccupantColor, 'CIRCLE', i, j, upperCaseLetter + enemies.data[upperCaseLetter]);
+    worldGrid[i][j].occupant = occupant;
+    buildHtmlOccupant(upperCaseLetter + enemies.data[upperCaseLetter]);
+  }
+}
+
+function pickUpOccupant(i, j) {
+  if (worldGrid[i][j].contains(mouseX, mouseY) && worldGrid[i][j].occupant) {
+    worldGrid[i][j].occupant.isHovering = true;
+    hoveringOccupant = worldGrid[i][j].occupant;
+  }
+}
+
+function putDownOccupant(i, j) {
+  if (worldGrid[i][j].contains(mouseX, mouseY)) {
+    if (!worldGrid[i][j].isFull()) {
+      worldGrid[hoveringOccupant.originI][hoveringOccupant.originJ].occupant = undefined;
+      worldGrid[i][j].occupant = new OccupantWithLetter(hoveringOccupant.col, hoveringOccupant.shape, i, j, hoveringOccupant.letter);
+    } else {
+      worldGrid[hoveringOccupant.originI][hoveringOccupant.originJ].occupant.isHovering = false;
+    }
+    hoveringOccupant = undefined;
   }
 }
 
@@ -165,24 +206,54 @@ function populateWorldGridWithCells() {
       worldGrid[i][j] = new Cell(
         i * floor(worldPixDimenY / viewGrid.dimenY),
         j * floor(worldPixDimenY / viewGrid.dimenY),
-        floor(worldPixDimenY / viewGrid.dimenY)
+        cellWidth
       );
     }
   }
 }
 
-function buildHtmlOccupant() {
-  let characterDiv = createDiv(
-    `<div class="character">
+function buildHtmlOccupant(letter) {
+  let li = document.createElement('li');
+  li.classList.add('column');
+  li.setAttribute("id", letter);
+  li.setAttribute("draggable", "true");
+  li.innerHTML = `<div class="character">
      <div class="color-elem">
        <div class="color" style="background: ${selectedOccupantColor};">
+        ${letter}
        </div>
      </div>
      <div class="character-info">
        <input type="number" name="" value="" placeholder="Initiative">
      </div>
-     </div>`);
-  characterDiv.parent('character-list');
+     <div class="delete-button" onclick="deleteItem('${letter}')">
+     <i class="material-icons">close</i>
+     </div>
+     </div>`;
+  document.getElementById('character-list').appendChild(li);
+  addDnDHandlers(li);
+}
+
+// when deleting from within canvas
+function deleteItemFromCanvas(i, j) {
+  if (worldGrid[i][j].occupant && worldGrid[i][j].contains(mouseX, mouseY)) {
+    // delete from canvas
+    document.getElementById(worldGrid[i][j].occupant.letter).remove();
+    // delete from DOM
+    worldGrid[i][j].occupant = undefined;
+  }
+}
+
+// onclick for character DOM element
+function deleteItem(id) {
+  // delete from canvas
+  goThroughAndDoCallback((i, j, id) => {
+    if (worldGrid[i][j].occupant && worldGrid[i][j].occupant.letter == id) {
+      worldGrid[i][j].occupant = undefined;
+    }
+  }, id);
+  // delete from DOM
+  document.getElementById(id).remove();
 }
 
 function isInsideCanvas() {

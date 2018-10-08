@@ -10,6 +10,9 @@ html, body {
   height: 40px;
   width: 40px;
   border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  color: white;
 }
 
 .color-grid {
@@ -59,9 +62,9 @@ hr {
 }
 
 .character{
-  display: grid;
-  grid-template-areas: "color info";
-  grid-template-columns: 1fr 7fr;
+  display: flex;
+  grid-template-areas: "color info button";
+  grid-template-columns: 1fr 6fr 1fr;
   grid-column-gap: 6px;
 }
 
@@ -71,5 +74,25 @@ hr {
 
 .character .character-info {
   grid-area: info;
-  margin: 5px 0;
+  margin: 5px 0 5px 10px;
+}
+
+.character .delete-button {
+  grid-area: button;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+}
+
+.character i {
+  margin: 8px 0;
+}
+
+.character :hover{
+  cursor: context-menu;
+}
+
+.character-list-wrapper {
+  padding: 0;
+  list-style: none;
 }
