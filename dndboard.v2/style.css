@@ -2,8 +2,11 @@ html, body {
   background: grey;
 }
 
-.play-menu {
-  margin-top: 30px;
+.map-menu{
+  margin:10px 0;
+}
+.tab-content{
+  margin:10px 0;
 }
 
 .color {
@@ -95,4 +98,13 @@ hr {
 .character-list-wrapper {
   padding: 0;
   list-style: none;
+}
+
+.active-player{
+  background-color: #636161;
+}
+
+#turn-button{
+  margin:0 96px;
+  width: 100px;
 }

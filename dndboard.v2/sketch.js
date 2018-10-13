@@ -224,7 +224,7 @@ function buildHtmlOccupant(letter) {
        </div>
      </div>
      <div class="character-info">
-       <input type="number" name="" value="" placeholder="Initiative">
+       <input type="number" id="initNumber${letter}" value="" placeholder="Initiative">
      </div>
      <div class="delete-button" onclick="deleteItem('${letter}')">
      <i class="material-icons">close</i>

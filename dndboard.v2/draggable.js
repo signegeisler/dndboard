@@ -1,4 +1,6 @@
 var dragSrcEl = null;
+let id;
+let result;
 
 function handleDragStart(e) {
   // Target (this) element is the source node.
@@ -6,6 +8,8 @@ function handleDragStart(e) {
 
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.outerHTML);
+  result =document.getElementById('initNumber'+this.id).value;
+  id = this.id;
 
   this.classList.add('dragElem');
 }
@@ -45,8 +49,8 @@ function handleDrop(e) {
     var dropHTML = e.dataTransfer.getData('text/html');
     this.insertAdjacentHTML('beforebegin',dropHTML);
     var dropElem = this.previousSibling;
+    document.getElementById('initNumber'+id).value = result;
     addDnDHandlers(dropElem);
-
   }
   this.classList.remove('over');
   return false;
