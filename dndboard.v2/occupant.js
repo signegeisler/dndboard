@@ -67,6 +67,8 @@ class OccupantWithLetter extends BaseOccupant {
     fill(0);
     textSize(this.fontSize);
     fill(this.fontCol);
+    if(this.letter){
     text(this.letter, x, y);
+  }
   }
 }

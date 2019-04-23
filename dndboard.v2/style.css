@@ -108,3 +108,19 @@ hr {
   margin:0 96px;
   width: 100px;
 }
+
+.shape-picker {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  justify-items: center;
+}
+
+.shape {
+  min-height: 40px;
+  width: 40px;
+  background-color: #ffffff;
+}
+
+.circle {
+  border-radius: 50%;
+}

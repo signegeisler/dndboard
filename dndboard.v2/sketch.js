@@ -7,13 +7,20 @@ let worldPixDimenX = worldPixDimenY * worldDimenScale;
 let viewGrid;
 let selectedTileColor = '#c62828';
 let selectedOccupantColor;
+let selectedEffectColor;
+let selectedEffectShape;
 let mapMakingMode = true;
 let playPlaceMode = false;
+let effectMode = false;
 let worldGridCoordinateI;
 let worldGridCoordinateJ;
 let cellWidth;
 let enemies;
 let hoveringOccupant;
+let activeEffects;
+let hoveringEffect;
+let isHero;
+let heroes;
 
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
@@ -27,15 +34,21 @@ function toggleMode(mode) {
   if (mode == 'mapmk') {
     mapMakingMode = true;
     playPlaceMode = false;
-  } else {
+    effectMode = false;
+  } else if (mode == 'play') {
     mapMakingMode = false;
     playPlaceMode = true;
+    effectMode = false;
+  } else {
+    mapMakingMode = false;
+    playPlaceMode = false;
+    effectMode = true;
   }
 }
 
 function setup() {
   selectedOccupantColor = color('#c62828');
-  frameRate(10);
+  frameRate(20);
   let cvs = createCanvas(worldPixDimenX, worldPixDimenY);
   cvs.parent('canvas');
   worldGrid = make2DArray(worldGridDimenX, worldGridDimenY);
@@ -43,6 +56,9 @@ function setup() {
   cellWidth = floor(worldPixDimenY / viewGrid.dimenY);
   populateWorldGridWithCells();
   enemies = createNumberDict();
+  heroes = [];
+  activeEffects = [];
+  isHero = true;
 }
 
 function draw() {
@@ -50,15 +66,26 @@ function draw() {
   goThroughAndDoCallback(drawViewGrid);
   if (hoveringOccupant) {
     hoveringOccupant.show(mouseX, mouseY, cellWidth);
+  } else if (hoveringEffect) {
+    hoveringEffect.show(mouseX, mouseY);
   }
 }
 
 function selectTileColor(col) {
   selectedTileColor = col;
+  console.log(col);
 }
 
 function selectOccupantColor(col) {
   selectedOccupantColor = color(col);
+}
+
+function selectEffectColor(col) {
+  selectedEffectColor = col;
+}
+
+function selectEffectShape(shape) {
+  selectedEffectShape = shape;
 }
 
 function mousePressed() {
@@ -100,6 +127,10 @@ function mouseReleased() {
     if (playPlaceMode) {
       if (mouseButton === LEFT && hoveringOccupant) {
         goThroughAndDoCallback(putDownOccupant);
+      }
+    } else if (effectMode) {
+      if (mouseButton === LEFT && hoveringEffect) {
+        goThroughAndDoCallback(putDownEffect);
       }
     }
   }
@@ -161,11 +192,18 @@ function placeOccupant(i, j) {
   if (worldGrid[i][j].contains(mouseX, mouseY) && !worldGrid[i][j].isFull()) {
     let letter = document.getElementById('character-letter-input').value;
     let upperCaseLetter = letter == "" ? 'X' : letter.toUpperCase();
-    // don't do this if hero
-    addOccupantToEnemies(upperCaseLetter);
-    let occupant = new OccupantWithLetter(selectedOccupantColor, 'CIRCLE', i, j, upperCaseLetter + enemies.data[upperCaseLetter]);
+
+    let occupant;
+    if (isHero) {
+      occupant = new OccupantWithLetter(selectedOccupantColor, 'CIRCLE', i, j, upperCaseLetter);
+      heroes.push(occupant);
+      buildHtmlOccupant(upperCaseLetter);
+    } else {
+      occupant = new OccupantWithLetter(selectedOccupantColor, 'CIRCLE', i, j, upperCaseLetter + enemies.data[upperCaseLetter]);
+      addOccupantToEnemies(upperCaseLetter);
+      buildHtmlOccupant(upperCaseLetter + enemies.data[upperCaseLetter]);
+    }
     worldGrid[i][j].occupant = occupant;
-    buildHtmlOccupant(upperCaseLetter + enemies.data[upperCaseLetter]);
   }
 }
 
@@ -193,6 +231,14 @@ function addOccupantToEnemies(letter) {
     enemies.add(letter, 1)
   } else {
     enemies.create(letter, 1);
+  }
+}
+
+function putDownEffect(i, j) {
+  if (worldGrid[i][j].contains(mouseX, mouseY)) {
+    let effect = new Effect(hoveringEffect.col, hoveringEffect.shape, worldGrid[i][j].x, worldGrid[i][j].y, hoveringEffect.width)
+    activeEffects.push(effect);
+    hoveringEffect = undefined;
   }
 }
 
