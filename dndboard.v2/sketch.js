@@ -9,6 +9,7 @@ let selectedTileColor = '#c62828';
 let selectedOccupantColor;
 let selectedEffectColor;
 let selectedEffectShape;
+let selectedEffectWidth; //need to be instantiated
 let mapMakingMode = true;
 let playPlaceMode = false;
 let effectMode = false;
@@ -48,6 +49,9 @@ function toggleMode(mode) {
 
 function setup() {
   selectedOccupantColor = color('#c62828');
+  selectedEffectColor = color(255, 204, 0, 30);
+  selectedEffectShape = "SQUARE";
+  selectedEffectWidth = 15;
   frameRate(20);
   let cvs = createCanvas(worldPixDimenX, worldPixDimenY);
   cvs.parent('canvas');
@@ -63,12 +67,18 @@ function setup() {
 
 function draw() {
   background(50);
+
   goThroughAndDoCallback(drawViewGrid);
   if (hoveringOccupant) {
     hoveringOccupant.show(mouseX, mouseY, cellWidth);
   } else if (hoveringEffect) {
     hoveringEffect.show(mouseX, mouseY);
   }
+   if(activeEffects.length>=1){
+     for(let i=0; i<activeEffects.length; i++){
+       activeEffects[i].show(activeEffects[i].originI, activeEffects[i].originJ);
+     }
+   }
 }
 
 function selectTileColor(col) {
@@ -81,7 +91,7 @@ function selectOccupantColor(col) {
 }
 
 function selectEffectColor(col) {
-  selectedEffectColor = col;
+  selectedEffectColor = color(col+"40");
 }
 
 function selectEffectShape(shape) {
@@ -101,6 +111,31 @@ function mousePressed() {
         goThroughAndDoCallback(placeOccupant);
       } else if (keyIsDown(CONTROL) && mouseButton === RIGHT) {
         goThroughAndDoCallback(deleteItemFromCanvas);
+      }
+    } else if (effectMode) {
+      if (keyIsDown(CONTROL) && mouseButton === LEFT) {
+        if (hoveringEffect) {
+          putDownEffect(mouseX,mouseY);
+        } else {
+          let effect = new Effect(selectedEffectColor, selectedEffectShape, mouseX, mouseY, (selectedEffectWidth/5)*cellWidth);
+          hoveringEffect = effect;
+         }
+        
+      }else if(mouseButton === RIGHT && keyIsDown(CONTROL)){
+          for(let i=0; i< activeEffects.length; i++){
+            if(activeEffects[i].contains(mouseX, mouseY)){
+              console.log("I'm IN!!");
+              hoveringEffect = activeEffects[i];
+              activeEffects.splice(i,1);
+            }
+          }
+      }else if(mouseButton === RIGHT){
+        for(let i=0; i< activeEffects.length; i++){
+          if(activeEffects[i].contains(mouseX, mouseY)){
+            activeEffects.splice(i,1);
+            console.log(activeEffects);
+          }
+        }
       }
     }
   }
@@ -128,13 +163,11 @@ function mouseReleased() {
       if (mouseButton === LEFT && hoveringOccupant) {
         goThroughAndDoCallback(putDownOccupant);
       }
-    } else if (effectMode) {
-      if (mouseButton === LEFT && hoveringEffect) {
-        goThroughAndDoCallback(putDownEffect);
-      }
-    }
+    } 
+
   }
 }
+
 
 function saveInitWorldGridCoordinate(i, j) {
   if (worldGrid[i][j].contains(mouseX, mouseY)) {
@@ -235,12 +268,12 @@ function addOccupantToEnemies(letter) {
 }
 
 function putDownEffect(i, j) {
-  if (worldGrid[i][j].contains(mouseX, mouseY)) {
-    let effect = new Effect(hoveringEffect.col, hoveringEffect.shape, worldGrid[i][j].x, worldGrid[i][j].y, hoveringEffect.width)
+    let effect = new Effect(hoveringEffect.col, hoveringEffect.shape, i, j, hoveringEffect.width);
+    console.log(activeEffects);
     activeEffects.push(effect);
     hoveringEffect = undefined;
-  }
 }
+
 
 function drawViewGrid(i, j) {
   worldGrid[i][j].show();
@@ -305,3 +338,5 @@ function deleteItem(id) {
 function isInsideCanvas() {
   return mouseX >= 0 && mouseY >= 0 && mouseX <= width && mouseY <= height;
 }
+
+

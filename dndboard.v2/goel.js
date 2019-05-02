@@ -24,10 +24,11 @@ $(document).ready(function() {
   let slider = document.getElementById("effect-size");
   let output = document.getElementById("effect-size-value");
   output.innerHTML = slider.value; // Display the default slider value
-
+    
   // Update the current slider value (each time you drag the slider handle)
   slider.oninput = function() {
     output.innerHTML = this.value;
+    selectedEffectWidth = this.value;
   }
 
 });

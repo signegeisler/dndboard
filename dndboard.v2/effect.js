@@ -5,7 +5,7 @@ class Effect {
     this.originI = originI;
     this.originJ = originJ;
     this.width = width;
-    this.isHovering = true;
+    this.isHovering = false;
   }
 
   show(x, y) {
@@ -13,6 +13,7 @@ class Effect {
     fill(this.col, 63);
     switch (this.shape) {
       case "CIRCLE":
+      console.log("Circle");
         ellipse(x, y, this.width);
         break;
       case "SQUARE":
@@ -23,4 +24,11 @@ class Effect {
         break;
     }
   }
+
+  contains(mX, mY) {
+  
+    return (mX > this.originI - this.width /2 && mX < this.originI + this.width/2 &&
+      mY > this.originJ -this.width/2 && mY < this.originJ + this.width/2);
+    }
+  
 }
