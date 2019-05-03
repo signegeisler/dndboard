@@ -51,7 +51,7 @@ function toggleMode(mode) {
 }
 
 function saveMyGrid() {
-  let blob = ([{grid:worldGrid}, {effects: activeEffects}]);
+  let blob = ([{ grid: worldGrid }, { effects: activeEffects }]);
   save(blob, "DND-map.json");
 }
 
@@ -75,32 +75,28 @@ function receivedText(e) {
   worldGrid = [];
   worldGrid = make2DArray(worldGridDimenX, worldGridDimenY);
   populateWorldGridWithCells();
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 32; i++) {
     for (let j = 0; j < 20; j++) {
       if (typeof loadedMap[i][j].color != "string") {
         worldGrid[i][j].color = color(loadedMap[i][j].color.levels);
       } else {
         worldGrid[i][j].color = color(loadedMap[i][j].color);
       }
-
       if (loadedMap[i][j].occupant != null) {
         var newOccupant = loadedMap[i][j].occupant;
         worldGrid[i][j].occupant = new OccupantWithLetter(color(newOccupant.col.levels), newOccupant.shape, newOccupant.originI, newOccupant.originJ, newOccupant.letter);
       }
     }
   }
-
-    if(loadedEffects != undefined){
-      for(let p=0; p<loadedEffects.length-1; p++){
-        
-        let temp = loadedEffects[p];
-        console.log(temp);
+  if (loadedEffects != undefined) {
+    for (let p = 0; p <= loadedEffects.length - 1; p++) {
+      let temp = loadedEffects[p];
+      console.log(temp);
       let newEffect = new Effect(color(temp.col.levels), temp.shape, temp.originI, temp.originJ, temp.width);
-        activeEffects.push(newEffect);
+      activeEffects.push(newEffect);
     }
-    }
+  }
   document.getElementById('fileinput').value = "";
-
 }
 
 
@@ -223,7 +219,6 @@ function mouseReleased() {
   }
 }
 
-
 function saveInitWorldGridCoordinate(i, j) {
   if (worldGrid[i][j].contains(mouseX, mouseY)) {
     worldGridCoordinateI = i;
@@ -287,8 +282,10 @@ function placeOccupant(i, j) {
       heroes.push(occupant);
       buildHtmlOccupant(upperCaseLetter);
     } else {
-      occupant = new OccupantWithLetter(selectedOccupantColor, 'CIRCLE', i, j, upperCaseLetter + enemies.data[upperCaseLetter]);
       addOccupantToEnemies(upperCaseLetter);
+      occupant = new OccupantWithLetter(selectedOccupantColor, 'CIRCLE', i, j, upperCaseLetter + enemies.data[upperCaseLetter]);
+      
+      console.log(enemies.data[upperCaseLetter]);
       buildHtmlOccupant(upperCaseLetter + enemies.data[upperCaseLetter]);
     }
     worldGrid[i][j].occupant = occupant;

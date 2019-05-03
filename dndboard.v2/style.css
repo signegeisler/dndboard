@@ -19,9 +19,21 @@ html, body {
 }
 
 .color-grid {
+  overflow: scroll;
+  max-height: 500px;
   display: grid;
   grid-gap: 6px;
   grid-template-columns: repeat(7, 40px);
+}
+
+.grid-map{
+  max-height: 100% !important;
+  height: 100%;
+  overflow: visible;
+}
+
+#color-player-grid{
+  max-height:155px;
 }
 
 .color-elem {
@@ -29,7 +41,7 @@ html, body {
 }
 
 .map-controls{
-  margin-top: 500px;
+  margin-top: 35px;
   display: grid;
   grid-template-rows: auto auto auto;
   grid-row-gap: 10px;
