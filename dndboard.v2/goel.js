@@ -15,11 +15,13 @@ $(document).ready(function() {
        }
     }
   );
-
-  $('.color-elem').each(function(index, event){
-    this.addEventListener('click', function(){
-    });
-  });
+  
+  $('.color').click(function(){
+    $('.color').each(function(){
+      $(this).css('border', 'none');
+    })
+    $(this).css('border','3px solid black');
+});
 
   let slider = document.getElementById("effect-size");
   let output = document.getElementById("effect-size-value");

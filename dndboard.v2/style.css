@@ -28,6 +28,13 @@ html, body {
   display: inline-block;
 }
 
+.map-controls{
+  margin-top: 500px;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  grid-row-gap: 10px;
+}
+
 .wrapper {
   display: grid;
   grid-template-columns: 4fr 1fr;

@@ -22,6 +22,9 @@ let activeEffects;
 let hoveringEffect;
 let isHero;
 let heroes;
+let data;
+let loadedMap;
+let loadedEffects;
 
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
@@ -47,7 +50,62 @@ function toggleMode(mode) {
   }
 }
 
+function saveMyGrid() {
+  let blob = ([{grid:worldGrid}, {effects: activeEffects}]);
+  save(blob, "DND-map.json");
+}
+
+function loadMyGrid() {
+  var input, file, fr;
+
+  input = document.getElementById('fileinput');
+  file = input.files[0];
+  fr = new FileReader();
+  fr.onload = receivedText;
+  fr.readAsText(file);
+}
+
+function receivedText(e) {
+  let lines = e.target.result;
+  data = JSON.parse(lines);
+  console.log(data);
+  loadedMap = data[0].grid;
+  loadedEffects = data[1].effects;
+  console.log(loadedEffects);
+  worldGrid = [];
+  worldGrid = make2DArray(worldGridDimenX, worldGridDimenY);
+  populateWorldGridWithCells();
+  for (let i = 0; i < 20; i++) {
+    for (let j = 0; j < 20; j++) {
+      if (typeof loadedMap[i][j].color != "string") {
+        worldGrid[i][j].color = color(loadedMap[i][j].color.levels);
+      } else {
+        worldGrid[i][j].color = color(loadedMap[i][j].color);
+      }
+
+      if (loadedMap[i][j].occupant != null) {
+        var newOccupant = loadedMap[i][j].occupant;
+        worldGrid[i][j].occupant = new OccupantWithLetter(color(newOccupant.col.levels), newOccupant.shape, newOccupant.originI, newOccupant.originJ, newOccupant.letter);
+      }
+    }
+  }
+
+    if(loadedEffects != undefined){
+      for(let p=0; p<loadedEffects.length-1; p++){
+        
+        let temp = loadedEffects[p];
+        console.log(temp);
+      let newEffect = new Effect(color(temp.col.levels), temp.shape, temp.originI, temp.originJ, temp.width);
+        activeEffects.push(newEffect);
+    }
+    }
+  document.getElementById('fileinput').value = "";
+
+}
+
+
 function setup() {
+
   selectedOccupantColor = color('#c62828');
   selectedEffectColor = color(255, 204, 0, 30);
   selectedEffectShape = "SQUARE";
@@ -74,16 +132,15 @@ function draw() {
   } else if (hoveringEffect) {
     hoveringEffect.show(mouseX, mouseY);
   }
-   if(activeEffects.length>=1){
-     for(let i=0; i<activeEffects.length; i++){
-       activeEffects[i].show(activeEffects[i].originI, activeEffects[i].originJ);
-     }
-   }
+  if (activeEffects.length >= 1) {
+    for (let i = 0; i < activeEffects.length; i++) {
+      activeEffects[i].show(activeEffects[i].originI, activeEffects[i].originJ);
+    }
+  }
 }
 
 function selectTileColor(col) {
   selectedTileColor = col;
-  console.log(col);
 }
 
 function selectOccupantColor(col) {
@@ -91,7 +148,7 @@ function selectOccupantColor(col) {
 }
 
 function selectEffectColor(col) {
-  selectedEffectColor = color(col+"40");
+  selectedEffectColor = color(col + "40");
 }
 
 function selectEffectShape(shape) {
@@ -115,25 +172,23 @@ function mousePressed() {
     } else if (effectMode) {
       if (keyIsDown(CONTROL) && mouseButton === LEFT) {
         if (hoveringEffect) {
-          putDownEffect(mouseX,mouseY);
+          putDownEffect(mouseX, mouseY);
         } else {
-          let effect = new Effect(selectedEffectColor, selectedEffectShape, mouseX, mouseY, (selectedEffectWidth/5)*cellWidth);
+          let effect = new Effect(selectedEffectColor, selectedEffectShape, mouseX, mouseY, (selectedEffectWidth / 5) * cellWidth);
           hoveringEffect = effect;
-         }
-        
-      }else if(mouseButton === RIGHT && keyIsDown(CONTROL)){
-          for(let i=0; i< activeEffects.length; i++){
-            if(activeEffects[i].contains(mouseX, mouseY)){
-              console.log("I'm IN!!");
-              hoveringEffect = activeEffects[i];
-              activeEffects.splice(i,1);
-            }
+        }
+
+      } else if (mouseButton === RIGHT && keyIsDown(CONTROL)) {
+        for (let i = 0; i < activeEffects.length; i++) {
+          if (activeEffects[i].contains(mouseX, mouseY)) {
+            hoveringEffect = activeEffects[i];
+            activeEffects.splice(i, 1);
           }
-      }else if(mouseButton === RIGHT){
-        for(let i=0; i< activeEffects.length; i++){
-          if(activeEffects[i].contains(mouseX, mouseY)){
-            activeEffects.splice(i,1);
-            console.log(activeEffects);
+        }
+      } else if (mouseButton === RIGHT) {
+        for (let i = 0; i < activeEffects.length; i++) {
+          if (activeEffects[i].contains(mouseX, mouseY)) {
+            activeEffects.splice(i, 1);
           }
         }
       }
@@ -163,7 +218,7 @@ function mouseReleased() {
       if (mouseButton === LEFT && hoveringOccupant) {
         goThroughAndDoCallback(putDownOccupant);
       }
-    } 
+    }
 
   }
 }
@@ -268,10 +323,10 @@ function addOccupantToEnemies(letter) {
 }
 
 function putDownEffect(i, j) {
-    let effect = new Effect(hoveringEffect.col, hoveringEffect.shape, i, j, hoveringEffect.width);
-    console.log(activeEffects);
-    activeEffects.push(effect);
-    hoveringEffect = undefined;
+  let effect = new Effect(hoveringEffect.col, hoveringEffect.shape, i, j, hoveringEffect.width);
+  console.log(activeEffects);
+  activeEffects.push(effect);
+  hoveringEffect = undefined;
 }
 
 

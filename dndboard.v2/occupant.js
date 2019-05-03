@@ -45,7 +45,6 @@ class OccupantWithLetter extends BaseOccupant {
 
   determineFontColor() {
     // 143 - the magic number, så gul får mørk tekst
-    console.log(this.col.levels);
     if (((this.col.levels[0] + this.col.levels[1] + this.col.levels[2]) / 3) > 143) {
       return 32;
     } else {
