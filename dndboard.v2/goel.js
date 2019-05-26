@@ -88,6 +88,7 @@ $(document).ready(function () {
     $(this).css('border', '3px solid black');
   });
 
+
   let slider = document.getElementById("effect-size");
   let output = document.getElementById("effect-size-value");
   output.innerHTML = slider.value; // Display the default slider value

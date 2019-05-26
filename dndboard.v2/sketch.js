@@ -25,6 +25,7 @@ let heroes;
 let data;
 let loadedMap;
 let loadedEffects;
+let io;
 
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
@@ -68,10 +69,10 @@ function loadMyGrid() {
 function receivedText(e) {
   let lines = e.target.result;
   data = JSON.parse(lines);
-  console.log(data);
+ 
   loadedMap = data[0].grid;
   loadedEffects = data[1].effects;
-  console.log(loadedEffects);
+  
   worldGrid = [];
   worldGrid = make2DArray(worldGridDimenX, worldGridDimenY);
   populateWorldGridWithCells();
@@ -91,7 +92,7 @@ function receivedText(e) {
   if (loadedEffects != undefined) {
     for (let p = 0; p <= loadedEffects.length - 1; p++) {
       let temp = loadedEffects[p];
-      console.log(temp);
+      
       let newEffect = new Effect(color(temp.col.levels), temp.shape, temp.originI, temp.originJ, temp.width);
       activeEffects.push(newEffect);
     }
@@ -101,7 +102,6 @@ function receivedText(e) {
 
 
 function setup() {
-
   selectedOccupantColor = color('#c62828');
   selectedEffectColor = color(255, 204, 0, 30);
   selectedEffectShape = "SQUARE";
@@ -156,6 +156,8 @@ function mousePressed() {
     if (mapMakingMode) {
       if (keyIsDown(CONTROL) && mouseButton === LEFT) {
         goThroughAndDoCallback(saveInitWorldGridCoordinate);
+      }else if(keyIsDown(ALT) && mouseButton === LEFT){
+          goThroughAndDoCallback(setColorFromCoordinates);
       } else if (mouseButton === LEFT) {
         goThroughAndDoCallback(colorTile);
       }
@@ -164,6 +166,8 @@ function mousePressed() {
         goThroughAndDoCallback(placeOccupant);
       } else if (keyIsDown(CONTROL) && mouseButton === RIGHT) {
         goThroughAndDoCallback(deleteItemFromCanvas);
+      }else if(keyIsDown(ALT) && mouseButton === LEFT){
+        goThroughAndDoCallback(setColorFromOccupants);
       }
     } else if (effectMode) {
       if (keyIsDown(CONTROL) && mouseButton === LEFT) {
@@ -263,7 +267,6 @@ function colorDraggedTiles(i, j) {
 }
 
 function colorTileBlock(gI, gJ, sI, sJ) {
-  console.log('colortileblock');
   for (let i = sI; i <= gI; i++) {
     for (let j = sJ; j <= gJ; j++) {
       worldGrid[i][j].color = selectedTileColor;
@@ -321,7 +324,6 @@ function addOccupantToEnemies(letter) {
 
 function putDownEffect(i, j) {
   let effect = new Effect(hoveringEffect.col, hoveringEffect.shape, i, j, hoveringEffect.width);
-  console.log(activeEffects);
   activeEffects.push(effect);
   hoveringEffect = undefined;
 }
@@ -389,6 +391,21 @@ function deleteItem(id) {
 
 function isInsideCanvas() {
   return mouseX >= 0 && mouseY >= 0 && mouseX <= width && mouseY <= height;
+}
+
+function setColorFromCoordinates(i,j){
+  if(worldGrid[i][j].contains(mouseX, mouseY)){
+    let color = worldGrid[i][j].color;
+    selectedTileColor = color;
+  }
+}
+
+function setColorFromOccupants(i,j){
+  if(worldGrid[i][j].contains(mouseX, mouseY) && worldGrid[i][j].occupant != undefined){
+    
+    let color = worldGrid[i][j].occupant.col;
+    selectedOccupantColor = color;
+  }
 }
 
 
