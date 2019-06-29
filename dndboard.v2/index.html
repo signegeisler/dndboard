@@ -14,12 +14,13 @@
   <script src="libraries/p5.js"></script>
   <script src="libraries/p5.dom.js"></script>
   <script src="libraries/p5.sound.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
 
+  <script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  
   <script src="sketch.js"></script>
   <script src="cell.js"></script>
   <script src="occupant.js"></script>
@@ -54,276 +55,24 @@
             <div class="map-menu">
               <div class="color-picker-wrapper">
                 <div class="color-grid grid-map" id="color-grid-menu">
-                  <!--<div class="color-elem" onclick="selectTileColor('#17202a')">
-                    <div class="color" style="background: #17202a;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor(0)">
-                    <div class="color" style="background: #000;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#c62828')">
-                    <div class="color" style="background: #c62828;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#4527a0')">
-                    <div class="color" style="background: #4527a0;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#1565c0')">
-                    <div class="color" style="background: #1565c0;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#00838f')">
-                    <div class="color" style="background: #00838f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#00695c')">
-                    <div class="color" style="background: #00695c;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#2e7d32')">
-                    <div class="color" style="background: #2e7d32;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#9e9d24')">
-                    <div class="color" style="background: #9e9d24;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#ff8f00')">
-                    <div class="color" style="background: #ff8f00;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#d84315')">
-                    <div class="color" style="background: #d84315;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#4e342e')">
-                    <div class="color" style="background: #4e342e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#424242')">
-                    <div class="color" style="background: #424242;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#37474f')">
-                    <div class="color" style="background: #37474f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#fafafa')">
-                    <div class="color" style="background: #fafafa;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#344724')">
-                    <div class="color" style="background: #344724;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#497445')">
-                    <div class="color" style="background: #497445;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#87673a')">
-                    <div class="color" style="background: #87673a;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#513814')">
-                    <div class="color" style="background: #513814;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#e1d695')">
-                    <div class="color" style="background: #e1d695;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#b6a767')">
-                    <div class="color" style="background: #b6a767;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#d6bda8')">
-                    <div class="color" style="background: #d6bda8;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#876853')">
-                    <div class="color" style="background: #876853;">
-                    </div>
-                  </div>
 
-
-
-                  <div class="color-elem" onclick="selectTileColor('#af554f')">
-                    <div class="color" style="background: #af554f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#5a6d7e')">
-                    <div class="color" style="background: #5a6d7e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#b4b5b7')">
-                    <div class="color" style="background: #b4b5b7;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#867078')">
-                    <div class="color" style="background: #867078;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#435b7e')">
-                    <div class="color" style="background: #435b7e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#dbabab')">
-                    <div class="color" style="background: #dbabab;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#b84d63')">
-                    <div class="color" style="background: #b84d63;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#871f34')">
-                    <div class="color" style="background: #871f34;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectTileColor('#9d6fde')">
-                    <div class="color" style="background: #9d6fde;">
-                    </div>
-                  </div>
-                  -->
                 </div>
                 <div class="map-controls">
                     <input type='file' id='fileinput'/>
                 <button onclick="loadMyGrid()">Load</button>
                 <button onclick="saveMyGrid()">Save</button>
               </div>
+              
               </div>
             </div>
           </div>
           <div id="play" class="tab-pane fade">
             <div class="play-menu">
+              <div id="remove-play">
               <h4>Create</h4>
               <div class="color-picker-wrapper">
                 <div class="color-grid" id="color-player-grid">
-                 <!-- <div class="color-elem" onclick="selectOccupantColor(0)">
-                    <div class="color" style="background: #000;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#c62828')">
-                    <div class="color" style="background: #c62828;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#4527a0')">
-                    <div class="color" style="background: #4527a0;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#1565c0')">
-                    <div class="color" style="background: #1565c0;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#00838f')">
-                    <div class="color" style="background: #00838f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#00695c')">
-                    <div class="color" style="background: #00695c;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#2e7d32')">
-                    <div class="color" style="background: #2e7d32;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#9e9d24')">
-                    <div class="color" style="background: #9e9d24;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#ff8f00')">
-                    <div class="color" style="background: #ff8f00;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#d84315')">
-                    <div class="color" style="background: #d84315;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#4e342e')">
-                    <div class="color" style="background: #4e342e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#424242')">
-                    <div class="color" style="background: #424242;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#37474f')">
-                    <div class="color" style="background: #37474f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#fafafa')">
-                    <div class="color" style="background: #fafafa;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#344724')">
-                    <div class="color" style="background: #344724;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#497445')">
-                    <div class="color" style="background: #497445;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#87673a')">
-                    <div class="color" style="background: #87673a;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#513814')">
-                    <div class="color" style="background: #513814;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#e1d695')">
-                    <div class="color" style="background: #e1d695;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#b6a767')">
-                    <div class="color" style="background: #b6a767;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#d6bda8')">
-                    <div class="color" style="background: #d6bda8;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#876853')">
-                    <div class="color" style="background: #876853;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#af554f')">
-                    <div class="color" style="background: #af554f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#5a6d7e')">
-                    <div class="color" style="background: #5a6d7e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#b4b5b7')">
-                    <div class="color" style="background: #b4b5b7;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#867078')">
-                    <div class="color" style="background: #867078;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#435b7e')">
-                    <div class="color" style="background: #435b7e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#dbabab')">
-                    <div class="color" style="background: #dbabab;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#b84d63')">
-                    <div class="color" style="background: #b84d63;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#871f34')">
-                    <div class="color" style="background: #871f34;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectOccupantColor('#9d6fde')">
-                    <div class="color" style="background: #9d6fde;">
-                    </div>
-                  </div>-->
+
                 </div>
               </div>
               <div class="letter-wrapper">
@@ -340,7 +89,8 @@
               </label>
               </div>
               <hr>
-              <div class="">
+            </div>
+              <div class="initiatives" id="initiatives">
                 <h4>Initiatives</h4>
                 <ul class="character-list-wrapper" id="character-list">
                 </ul>
@@ -353,94 +103,7 @@
               <h4>Color</h4>
               <div class="color-picker-wrapper">
                 <div class="color-grid" id="color-effect-menu">
-                 <!-- <div class="color-elem" onclick="selectEffectColor(0)">
-                    <div class="color" style="background: #000;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#c62828')">
-                    <div class="color" style="background: #c62828;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#4527a0')">
-                    <div class="color" style="background: #4527a0;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#1565c0')">
-                    <div class="color" style="background: #1565c0;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#00838f')">
-                    <div class="color" style="background: #00838f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#00695c')">
-                    <div class="color" style="background: #00695c;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#2e7d32')">
-                    <div class="color" style="background: #2e7d32;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#9e9d24')">
-                    <div class="color" style="background: #9e9d24;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#ff8f00')">
-                    <div class="color" style="background: #ff8f00;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#d84315')">
-                    <div class="color" style="background: #d84315;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#4e342e')">
-                    <div class="color" style="background: #4e342e;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#424242')">
-                    <div class="color" style="background: #424242;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#37474f')">
-                    <div class="color" style="background: #37474f;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#fafafa')">
-                    <div class="color" style="background: #fafafa;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#344724')">
-                    <div class="color" style="background: #344724;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#497445')">
-                    <div class="color" style="background: #497445;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#87673a')">
-                    <div class="color" style="background: #87673a;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#513814')">
-                    <div class="color" style="background: #513814;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#e1d695')">
-                    <div class="color" style="background: #e1d695;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#b6a767')">
-                    <div class="color" style="background: #b6a767;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#d6bda8')">
-                    <div class="color" style="background: #d6bda8;">
-                    </div>
-                  </div>
-                  <div class="color-elem" onclick="selectEffectColor('#876853')">
-                    <div class="color" style="background: #876853;">
-                    </div>
-                  </div>-->
+   
                 </div>
               </div>
               <h4>Shape</h4>
@@ -464,44 +127,16 @@
       </div>
     </div>
   </div>
+  <div>
+  <div>
+    <button id='isMasterButton' onclick="swithIsMaster()">Is Master window</button> 
+    <button id='sendMapButton' onclick="sendMapToServer()">Send Map</button>
+    <button id='canWriteButton' onclick="switchCanWrite()">||</button>
+  </div>
+</div>
   
-  
-<!--
- <script>
-  let ws = new WebSocket('localhost:300');
-  function WebSocketTest() {
-            
-            if ("WebSocket" in window) {
-               alert("WebSocket is supported by your Browser!");
-               
-               // Let us open a web socket
-               var ws = new WebSocket("ws://localhost:3000");
-				
-               ws.onopen = function() {
-                  
-                  // Web Socket is connected, send data using send()
-                  ws.send("Message to send");
-                  alert("Message is sent...");
-               };
-				
-               ws.onmessage = function (evt) { 
-                  var received_msg = evt.data;
-                  alert("Message is received...");
-               };
-				
-               ws.onclose = function() { 
-                  
-                  // websocket is closed.
-                  alert("Connection is closed..."); 
-               };
-            } else {
-              
-               // The browser doesn't support WebSocket
-               alert("WebSocket NOT supported by your Browser!");
-            }
-         }
- </script>
--->
+
+
   
  
   <script src="draggable.js"></script>

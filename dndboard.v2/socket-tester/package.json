@@ -1,0 +1,15 @@
+{
+  "name": "socket-tester",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sockets.js",
+  "dependencies": {
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -9,7 +9,7 @@
   "author": "Geisler Oervald",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.0",
+    "express": "^4.17.1",
     "socket.io": "^2.2.0"
   }
 }

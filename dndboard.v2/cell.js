@@ -4,7 +4,7 @@ class Cell {
     this.y = y;
     this.w = w;
     this.occupant;
-    this.color = color(23, 32, 42);
+    this.color = '#17202a';
   }
 
   show() {

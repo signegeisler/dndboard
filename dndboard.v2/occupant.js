@@ -1,6 +1,6 @@
 class BaseOccupant {
   constructor(col, shape, originI, originJ, isBlocking = false) {
-    this.col = col;
+    this.col = color(col);
     this.shape = shape;
     this.originI = originI;
     this.originJ = originJ;
